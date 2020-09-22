@@ -4,13 +4,11 @@ public class CalculatorImplemntation implements Calculator {
 
 	@Override
 	public int add(int a, int b) {
-		// TODO Auto-generated method stub
 		return a+b;
 	}
 
 	@Override
 	public int subtract(int a, int b) {
-		// TODO Auto-generated method stub
 		return a-b;
 	}
 
@@ -49,33 +47,42 @@ public class CalculatorImplemntation implements Calculator {
 	}
 
 	@Override
-	public int parse(String s) {
-		// TODO Auto-generated method stub
+	public int parse(String s) throws Exception{
 		String[] subs = s.split(" ");
-		int operand1 = Integer.parseInt(subs[0]);
-		int operand2 = Integer.parseInt(subs[2]);
+		if (Character.isDigit(subs[0].charAt(0))) {
+			int operand1 = Integer.parseInt(subs[0]);
+			int operand2 = Integer.parseInt(subs[2]);
 		
-		switch (subs[1]) {
-		case "+": {
-			return add(operand1, operand2);
-		}
-		case "-": {
-			return subtract(operand1, operand2);
-		}
-		case "*": {
-			return multiply(operand1, operand2);
-		}
-		case "/": {
-			return divide(operand1, operand2);
-		}
-		case "^": {
-			return exponent(operand1, operand2);
-		}
-		default: {
-			System.out.println("input not recognized");
-			return 0;
-		}
-			
+			switch (subs[1]) {
+			case "+": {
+				return add(operand1, operand2);
+			}
+			case "-": {
+				return subtract(operand1, operand2);
+			}
+			case "*": {
+				return multiply(operand1, operand2);
+			}
+			case "/": {
+				return divide(operand1, operand2);
+			}
+			case "^": {
+				return exponent(operand1, operand2);
+			}
+			default: {
+				throw new Exception("input not recognized : 1");
+			}
+				
+			}
+		} else {
+			switch (subs[0]) {
+			case "exp":
+				return exponent(Integer.parseInt(subs[1]),Integer.parseInt(subs[2]));
+			case "fib":
+				return fibonacci(Integer.parseInt(subs[1]));
+			default:
+				throw new Exception("input not recognized : 2");
+			}
 		}
 			
 	}
