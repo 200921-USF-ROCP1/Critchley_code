@@ -49,7 +49,9 @@ public class CalculatorImplemntation implements Calculator {
 	@Override
 	public int parse(String s) throws Exception{
 		String[] subs = s.split(" ");
+		
 		if (Character.isDigit(subs[0].charAt(0))) {
+			
 			int operand1 = Integer.parseInt(subs[0]);
 			int operand2 = Integer.parseInt(subs[2]);
 		
