@@ -2,8 +2,7 @@ package com.revature.generics;
 
 import java.util.ArrayList;
 
-import com.revature.generics.abstractclass.LinkedList;
-import com.revature.generics.abstractclass.LinkedList.Iterator;
+import com.revature.generics.LinkedList.Iterator;
 
 public class App {
 	public static void main(String[] args) {

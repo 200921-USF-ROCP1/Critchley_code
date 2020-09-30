@@ -1,4 +1,4 @@
-package com.revature.generics.abstractclass;
+package com.revature.generics;
 
 public class LinkedList<T> {
 	private Node head;
