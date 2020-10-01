@@ -6,11 +6,14 @@ import com.user.User;
 import com.user.types.*;
 
 public class Bank {
-		ArrayList<Standard> standards = new ArrayList<Standard>();
-		ArrayList<Employee> employees = new ArrayList<Employee>();
-		ArrayList<Admin> admins = new ArrayList<Admin>();
+	
+	// database
+	ArrayList<Standard> standards = new ArrayList<Standard>();
+	ArrayList<Employee> employees = new ArrayList<Employee>();
+	ArrayList<Admin> admins = new ArrayList<Admin>();
 		
-		User currentUser; 
+	User currentUser; 
+	
 	public Bank() {
 		createAdmins();
 		createEmployees();
@@ -35,53 +38,6 @@ public class Bank {
 	
 	private void init() {
 		// TODO Auto-generated method stub
-		int answer = -1;
-		switch(answer) {
-			case 1:
-				currentUser.checkAccountBalance();
-				break;
-			case 2:
-				currentUser.openAccount();
-				break;
-			case 3:
-				// prompt amount to withdraw
-				int withdrawAmount = 0;
-				currentUser.withdraw(withdrawAmount);
-			case 4:
-				// prompt amount to deposit
-				int depositAmount = 0;
-				currentUser.deposit(depositAmount);
-			case 5:
-				// prompt amount to transfer
-				int transferAmount = 0;
-				// prompt source account id
-				int sourceAccountID = 0;
-				if (!currentUser.hasAccount(sourceAccountID)) {
-					// prompt error
-					break;
-				}
-				// prompt destination account id
-				int destinationAccountID = 0;
-				if (!accountExits(destinationAccountID)) {
-					// prompt error
-					break;
-				}
-			case 6:
-				// edit info
-			case 7:
-				if (currentUser instanceof Employee) {
-					// view all or view specific?
-					
-				}
-				break;
-			case 8:
-				if (currentUser instanceof Admin) {
-					// modify customer info
-				}
-			case 9:
-				logout();
-				break;
-		}
 		
 	}
 
