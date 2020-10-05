@@ -67,23 +67,6 @@ public class Bank {
 
 	public void login() {
 		// TODO Auto-generated method stub
-		String username;
-		String password;
-		Scanner scan = new Scanner(System.in); // temporary input (??)
-		// prompt for username
-		System.out.println("ENTER USERNAME");
-		username = scan.nextLine();
-		// prompt for password
-		System.out.println("ENTER PASSWORD");
-		// fetch username and password
-		password = scan.nextLine();
-		//	- if exists
-		if (exists(username,password)) {
-			currentUser = new User();
-			init();
-		} else {
-			promptFailureLogin();
-		}
 		
 		
 		
