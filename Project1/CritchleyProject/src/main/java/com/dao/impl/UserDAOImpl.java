@@ -9,9 +9,10 @@ import java.util.List;
 
 import com.account.Account;
 import com.dao.GenericDAO;
+import com.dao.UserDAOInterface;
 import com.user.User;
 
-public class UserDAOImpl implements GenericDAO<User>{
+public class UserDAOImpl implements UserDAOInterface{
 	Connection connection;
 	ResultSet rs;
 	public UserDAOImpl(Connection connection) {
