@@ -2,6 +2,7 @@ package com.user;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.account.*;
 
 public class User {
@@ -11,7 +12,7 @@ public class User {
 	private String firstName; // not null
 	private String lastName; // not null
 	private String email; // not null
-	List<Account> accounts;
+	ArrayList<Account> accounts;
 	private Role role;
 	
 	public User() {
@@ -86,8 +87,12 @@ public class User {
 		this.userId = userId;
 	}
 
-	public void checkAccountBalance() {
+	public void checkAccountBalance(int accountId) {
 		// TODO Auto-generated method stub
+		Account acc = getAccount(accountId);
+		if (acc == null) {
+			
+		}
 		
 	}
 	
@@ -100,8 +105,15 @@ public class User {
 	}
 */
 	
-	public void withdrawAndDeposit(int amount, int accountId) {
-		
+	public void withdrawAndDeposit(double amount, int accountId) {
+		Account acc = getAccount(accountId);
+		if (acc == null) {
+			// prompt Failure
+		} else if (acc.getBalance() + amount < 0) {
+			// prompt failure
+		} else {
+			acc.setBalance(acc.getBalance() + amount);
+		}	
 	}
 /*
 	public void withdraw(int amount) {
@@ -116,15 +128,30 @@ public class User {
 	}
 */
 
-	public boolean hasAccount(int sourceAccountID) {
+	public boolean hasAccount(int accountId) {
 		// TODO Auto-generated method stub
-		return false;
+		if (getAccount(accountId) != null) return true;
+		else return false;
 	}
 
-	public Account getAccount() {
+	public Account getAccount(int accountId) {
 		// TODO Auto-generated method stub
-		
-		return null;
+		try {
+			Account acc = null;
+			int i = 0;
+			do {
+				acc = this.accounts.get(i);
+				i++;
+			} while (acc.getAccountId() != accountId);
+			
+			return acc;
+		} catch (IndexOutOfBoundsException e) {
+			return null;
+		}
+	}
+	
+	public ArrayList<Account> getAccounts() {
+		return accounts;
 	}
 
 	public Account openAccount(int accountID, int userID, double balance, int statusID, int typeID) {
@@ -132,5 +159,20 @@ public class User {
 		Account acc = new Account(accountID, userID, balance, statusID, typeID);
 		accounts.add(acc);
 		return acc;
+	}
+
+	public void setRole(int role_id) {
+		// TODO Auto-generated method stub
+		if (role_id == 1) {
+			
+		} else if (role_id == 2) {
+			
+		} else if (role_id == 3) {
+			
+		} else if (role_id == 4) {
+			
+		}
+		
+		
 	}
 }
