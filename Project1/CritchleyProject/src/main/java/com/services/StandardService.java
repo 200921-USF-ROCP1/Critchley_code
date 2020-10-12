@@ -1,6 +1,5 @@
 package com.services;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,87 +10,89 @@ import com.user.*;
 
 public class StandardService implements StandardServiceInterface {
 	
-	static User currentUser;
 	private UserDAOImpl userDAO;
 	private AccountDAOImpl accDAO;
-	private Connection connection;
 	
 	public StandardService() {
 		// TODO Auto-generated constructor stub
-		connection = ConnectionService.getConnection();
-		userDAO = new UserDAOImpl(connection);
+		userDAO = new UserDAOImpl();
 		accDAO = new AccountDAOImpl();
 	}
 	
 	
 
-	public void updateCurrentUserInfo(String username, String password, String firstName, String lastName, String email) {
-		// TODO Auto-generated method stub
-		User temp = null;
-		if ((temp = userDAO.getByString("username", username)) != null) {
+	public User updateUserInfo(User user) {
+		
+		if (userDAO.getByString("username", user.getUsername()) != null) {
 			// username taken
-		} else if((temp = userDAO.getByString("email", email)) != null) {
+			return null;
+		} else if(userDAO.getByString("email", user.getEmail()) != null) {
 			// email taken
+			return null;
 		}
-		currentUser = temp;
 		
-		currentUser.setUsername(username);
-		currentUser.setPassword(password);
-		currentUser.setEmail(email);
-		currentUser.setFirstName(firstName);
-		currentUser.setLastName(lastName);
-		
-		userDAO.update(currentUser);
+		return userDAO.update(user);
 		
 		
 	}
 	
-	public void withdrawal(double withdrawalAmount, int accountId) {
+	public boolean withdraw(double withdrawAmount, int accountId) {
 		
-		if (currentUser.getAccount(accountId) == null) {
-			// TODO no access to this account
+		// change to do something withn sessions
+		//if (currentUser.getAccount(accountId) == null) {
+		//	return false;
+		//}
+		// not enough in source account
+		if (withdrawAmount < accDAO.get(accountId).getBalance()) {
+			withdrawAmount *= -1;
+			return deposit(withdrawAmount, accountId);
 		}
+		return false;
 		
-		if (withdrawalAmount < currentUser.getAccount(accountId).getBalance()) {
-			withdrawalAmount *= -1;
-			deposit(withdrawalAmount, accountId);
-		}
-		// TODO else not available
 	}
 
-	public void deposit(double depositAmount, int accountId) {
-		// TODO Auto-generated method stub
-		Account acc = currentUser.withdrawAndDeposit(depositAmount, accountId);
+	public boolean deposit(double depositAmount, int accountId) {
+		
+		Account acc = accDAO.get(accountId);
 		if (acc == null) {
-			// TODO not available 
+			return false;
 		} else {
+			acc.withdrawAndDeposit(depositAmount);
 			accDAO.update(acc);
+			return true;
 		}
 		
 	}
 
-	public void transfer(int sourceAccountId, int destinationAccountId, double transferAmount) {
+	public boolean transfer(int sourceAccountId, int destinationAccountId, double transferAmount) {
 		Account srcTemp = null;
 		Account destTemp = null;
-		if ((srcTemp = currentUser.getAccount(sourceAccountId)) == null) {
-			// TODO transfer funds fail 
-		} else if ((destTemp = accountExists(destinationAccountId)) == null) {
-			// TODO transfer funds fail 
+		
+		// or srcTemp does not belong to current standard user
+		if ((srcTemp = accDAO.get(sourceAccountId)) == null) {
+			return false;
+		} else if ((destTemp = accDAO.get(destinationAccountId)) == null) {
+			return false;
 		} else if (transferAmount > srcTemp.getBalance()) {
-			// TODO transfer funds fail
+			return false;
 		} else {
-			withdrawal(transferAmount, sourceAccountId);
+			withdraw(transferAmount, sourceAccountId);
 			destTemp.setBalance(transferAmount + destTemp.getBalance());
 			accDAO.update(destTemp);
+			return true;
 		}
 	}
-	
-	private Account accountExists(int accountId) {
-		// check if account exists,
-		// maybe return type Account if so?
-		Account temp = null;
-		temp = accDAO.get(accountId);
-		return temp;
+
+	public List<Account> accountsByStatus(int statusId) {
+		// TODO Auto-generated method stub
+		List<Account> accounts = accDAO.getAll();
+		List<Account> retAccs = new ArrayList<Account>();
+		for (Account a: accounts) {
+			if (a.getStatus().getStatusId() == statusId)
+				retAccs.add(a);
+		}
+		return retAccs;
 	}
+	
 
 }

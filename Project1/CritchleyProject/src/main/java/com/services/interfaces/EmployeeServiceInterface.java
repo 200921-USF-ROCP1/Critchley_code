@@ -1,10 +1,21 @@
 package com.services.interfaces;
 
+import java.util.List;
+
+import com.account.Account;
+import com.user.User;
+
 public interface EmployeeServiceInterface extends StandardServiceInterface {
 	
-	public void viewAllUsers();
+	public List<User> viewAllUsers();
 	
-	public void viewUser(int userId);
+	public User viewUser(int userId);
 	
-	public void viewAccount(int accountId);
+	public Account viewAccount(int accountId);
+	
+	public List<Account> viewAllAccounts();
+	
+	public List<Account> accountsByStatus(int statusId);
+	
+	public List<Account> accountsByUser(int userId);
 }

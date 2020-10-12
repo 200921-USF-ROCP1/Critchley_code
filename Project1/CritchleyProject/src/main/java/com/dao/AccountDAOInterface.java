@@ -1,5 +1,9 @@
 package com.dao;
 
-public interface AccountDAOInterface extends GenericDAO {
+import java.util.List;
 
+import com.account.Account;
+
+public interface AccountDAOInterface extends GenericDAO<Account> {
+	public List<Account> getByUserId(int userId);
 }

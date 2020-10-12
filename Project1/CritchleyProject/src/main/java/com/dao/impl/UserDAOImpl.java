@@ -10,20 +10,21 @@ import java.util.List;
 import com.account.Account;
 import com.dao.GenericDAO;
 import com.dao.UserDAOInterface;
+import com.services.ConnectionService;
 import com.user.User;
 
 public class UserDAOImpl implements UserDAOInterface{
 	Connection connection;
 	ResultSet rs;
-	public UserDAOImpl(Connection connection) {
+	public UserDAOImpl() {
 		// TODO Auto-generated constructor stub
-		this.connection = connection;
+		this.connection = ConnectionService.getConnection();
 	}
 
-	public void create(User t) {
+	public User create(User t) {
 		// TODO Auto-generated method stub
 		try {
-			ArrayList<Account> accs = t.getAccounts();
+			//ArrayList<Account> accs = t.getAccounts();
 			
 			PreparedStatement ps = connection.prepareStatement("INSERT INTO users (username, password, firstName, lastName, email, role_id) VALUES (?,?,?,?,?,?);");
 			ps.setString(1, t.getUsername());
@@ -37,9 +38,11 @@ public class UserDAOImpl implements UserDAOInterface{
 			rs = ps.getResultSet();
 			rs.next();
 			
+			t.setUserId(rs.getInt("user_id"));
+			return t;
 			//return rs.getInt("user_id");
 		} catch (SQLException e) {
-			
+			return null;
 		}
 		
 	}
@@ -62,9 +65,11 @@ public class UserDAOImpl implements UserDAOInterface{
 				cur.setRole(rs.getInt("role_id"));
 				// set Accounts
 				
-				do {
-					cur.setAccount(accDAO.get(rs.getInt("account_id")));
-				} while (rs.next());
+				
+				List<Account> accounts = accDAO.getByUserId(cur.getUserId());
+				for (Account a : accounts) {
+					cur.setAccount(a);
+				}
 			}
 			return cur;
 			
@@ -91,9 +96,11 @@ public class UserDAOImpl implements UserDAOInterface{
 				cur.setEmail(rs.getString("email"));
 				cur.setRole(rs.getInt("role_id"));
 				// set Accounts
-				do {
-					cur.setAccount(accDAO.get(rs.getInt("account_id")));
-				} while (rs.next());
+				
+				List<Account> accounts = accDAO.getByUserId(cur.getUserId());
+				for (Account a : accounts) {
+					cur.setAccount(a);
+				}
 			}
 			return cur;
 			
@@ -103,7 +110,7 @@ public class UserDAOImpl implements UserDAOInterface{
 		return null;
 	}
 
-	public void update(User t) {
+	public User update(User t) {
 		// TODO Auto-generated method stub
 		try {
 			PreparedStatement ps = connection.prepareStatement("UPDATE users SET user_id = ?, username = ?, password = ?, firstName = ?, lastName = ?, email = ?, role_id = ?;");
@@ -116,10 +123,11 @@ public class UserDAOImpl implements UserDAOInterface{
 			ps.setInt(6, t.getRole().getRoleId());
 			
 			ps.executeUpdate();
-			
+			return t;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 		
 	}
@@ -158,8 +166,10 @@ public class UserDAOImpl implements UserDAOInterface{
 				cur.setEmail(rs.getString("email"));
 				cur.setRole(rs.getInt("role_id"));
 			
-				acc = accDAO.get(rs.getInt("account_id"));
-				cur.setAccount(acc);
+				List<Account> accounts = accDAO.getByUserId(cur.getUserId());
+				for (Account a : accounts) {
+					cur.setAccount(a);
+				}
 				// set Accounts
 				
 				allUsers.add(cur);

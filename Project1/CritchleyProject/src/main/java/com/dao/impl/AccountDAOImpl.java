@@ -8,10 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.account.Account;
+import com.dao.AccountDAOInterface;
 import com.dao.GenericDAO;
 import com.services.ConnectionService;
 
-public class AccountDAOImpl implements GenericDAO<Account> {
+public class AccountDAOImpl implements AccountDAOInterface {
 	Connection connection;
 	ResultSet rs;
 	
@@ -21,7 +22,7 @@ public class AccountDAOImpl implements GenericDAO<Account> {
 		rs = null;
 	}
 
-	public void create(Account t) {
+	public Account create(Account t) {
 		// TODO Auto-generated method stub
 		try {
 			PreparedStatement ps = connection.prepareStatement("INSERT INTO accounts (balance, status_id, type_id) VALUES (?, ?, ?);");
@@ -33,9 +34,10 @@ public class AccountDAOImpl implements GenericDAO<Account> {
 			rs = ps.getResultSet();
 			rs.next();
 			
-			//return rs.getInt("account_id");
+			t.setAccountId(rs.getInt("account_id"));
+			return t;
 		} catch (SQLException e) {
-			
+			return null;
 		}
 	}
 
@@ -64,7 +66,7 @@ public class AccountDAOImpl implements GenericDAO<Account> {
 		
 	}
 
-	public void update(Account t) {
+	public Account update(Account t) {
 		// TODO Auto-generated method stub
 		try {
 			PreparedStatement ps = connection.prepareStatement("UPDATE accounts SET balance = ?, status_id = ?, type_id = ? WHERE account_id = ?;");
@@ -74,9 +76,9 @@ public class AccountDAOImpl implements GenericDAO<Account> {
 			ps.setInt(4, t.getUserID());
 			
 			ps.executeUpdate();
-			
+			return t;
 		} catch (SQLException e) {
-			
+			return null;
 		}
 		
 	}
@@ -116,6 +118,32 @@ public class AccountDAOImpl implements GenericDAO<Account> {
 			return null;
 		}
 		
+	}
+	
+	public List<Account> getByUserId(int userId) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM accounts WHERE user_id = ?;");
+			ps.setInt(1, userId);
+			
+			rs = ps.executeQuery();
+			Account acc; 
+			List<Account> accounts = new ArrayList<Account>();
+			
+			while (rs.next()) {	
+				acc = new Account();
+				acc.setUserID(rs.getInt("user_id"));
+				acc.setAccountId(rs.getInt("account_id"));
+				acc.setBalance(rs.getDouble("balance"));
+				acc.setStatus(rs.getInt("status_id"));
+				acc.setType(rs.getInt("type_id"));	
+				accounts.add(acc);
+			}
+			
+			return accounts;
+			
+		} catch (SQLException e) {
+			return null;
+		}
 	}
 
 }

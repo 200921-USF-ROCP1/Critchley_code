@@ -71,5 +71,7 @@ public class Account {
 		this.userID = userID;
 	}
 	
-	
+	public void withdrawAndDeposit(double balance) {
+		this.balance += balance;
+	}
 }

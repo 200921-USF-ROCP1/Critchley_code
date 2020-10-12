@@ -123,25 +123,6 @@ public class User {
 		}
 		return acc;
 	}
-/*
-	public void withdraw(int amount) {
-		// TODO Auto-generated method stub
-		
-			
-	}
-
-	public void deposit(int depositA) {
-		// TODO Auto-generated method stub
-		
-	}
-*/
-
-	public Account hasAccount(int accountId) {
-		// TODO Auto-generated method stub
-		Account temp = null;
-		if ((temp = getAccount(accountId)) != null) return temp;
-		else return null;
-	}
 
 	public Account getAccount(int accountId) {
 		// TODO Auto-generated method stub
@@ -169,7 +150,7 @@ public class User {
 		accounts.add(acc);
 		return acc;
 	}
-
+	
 	public void setRole(int role_id) {
 		// TODO Auto-generated method stub
 		if (role_id == 1) {

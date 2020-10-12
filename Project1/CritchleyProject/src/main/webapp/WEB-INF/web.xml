@@ -9,4 +9,45 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+
+	<servlet>
+		<servlet-name>RestrictionServlet</servlet-name>
+		<servlet-class>com.servlets.RestrictionServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>RestrictionServlet</servlet-name>
+		<url-pattern>/login</url-pattern>
+		<url-pattern>/logout</url-pattern>
+		<url-pattern>/register</url-pattern>
+		<url-pattern>/users/*</url-pattern>
+		<url-pattern>/accounts/owned/*</url-pattern>
+		<url-pattern>/accounts/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>AccountServlet</servlet-name>
+		<servlet-class>com.servlets.AccountServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>AccountServlet</servlet-name>
+		<url-pattern>/accounts</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>StandardServlet</servlet-name>
+		<servlet-class>com.servlets.StandardServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>StandardServlet</servlet-name>
+		<url-pattern>/users</url-pattern>
+		<url-pattern>/accounts/status/*</url-pattern>
+		<url-pattern>/accounts/withdraw</url-pattern>
+		<url-pattern>/accounts/deposit</url-pattern>
+		<url-pattern>/accounts/transfer</url-pattern>
+	</servlet-mapping>
+	
+	
 </web-app>

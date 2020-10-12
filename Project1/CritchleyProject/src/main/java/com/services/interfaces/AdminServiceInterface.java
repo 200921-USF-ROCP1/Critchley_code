@@ -1,12 +1,11 @@
 package com.services.interfaces;
 
+import com.account.Account;
+import com.user.User;
+
 public interface AdminServiceInterface extends EmployeeServiceInterface {
 	
-	public void modifyUserById(int userId);
+	public User modifyUser(User user);
 	
-	public void modifyUserByEmail(String email);
-	
-	public void modifyUserByUsername(String username);
-	
-	public void modifyAccount(int accountId);
+	public Account modifyAccount(Account acc);
 }

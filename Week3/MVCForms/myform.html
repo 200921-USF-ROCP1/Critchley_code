@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<form method="POST" action="http://localhost:8080/MVCForms/submit">
+
+		Username:<input type="text" name="username"/> <br>
+		Password:<input type="password" name="password"/> <br>
+		<br>
+
+		<div>
+			Favorite Food?<br>
+			Onion<input type="radio" name="food" value="onion"/> <br>
+			Beet<input type="radio" name="food" value="beet"/> <br>
+			Potato<input type="radio" name="food" value="potato"/>
+		</div>
+		<br>
+		<div>
+			SpokenLanguages:<br>
+			English<input type="checkbox" name="language" value="english"/>
+			Spanish<input type="checkbox" name="language" value="spanish"/>
+			Arabix<input type="checkbox" name="language" value="arabic"/>
+		</div>
+		<br>
+		<input type="submit" name="Submit"/>
+
+	</form>
+</body>
+</html>
