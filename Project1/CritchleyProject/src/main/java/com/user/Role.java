@@ -5,11 +5,6 @@ public class Role {
 	private String role; // not null, unique
 	
 	public Role() {
-		
-	}
-	
-	public Role(int id) {
-		
 	}
 	
 	public Role(int roleId, String role) {

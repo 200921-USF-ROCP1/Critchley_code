@@ -1,5 +1,6 @@
 package com.servlets;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 
@@ -11,6 +12,8 @@ import com.dao.impl.UserDAOImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.services.LoginService;
+import com.services.ResponseHelper;
+import com.user.LoginClass;
 import com.user.User;
 
 public class RestrictionServlet extends HttpServlet {
@@ -48,23 +51,28 @@ public class RestrictionServlet extends HttpServlet {
 	private void doRegister(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession();
 		User cur = (User) session.getAttribute("User");
+		ObjectMapper mapper = new ObjectMapper();
 		try {
 			if (cur == null) {
 				// no current session
 				session.invalidate();
-				response.sendError(400, "No session logged in");
+				response.setStatus(400);
+				return;
+				
 			} else if (!cur.getRole().getRole().equals("Admin")) {
 				// invalid register credentials
-				response.sendError(400, "Invalid credentials");
+				response.setStatus(401);
+				ResponseHelper.makeResponse(response,  "The requested action is not permitted");
+				return;
 			} else {
-				ObjectMapper mapper = new ObjectMapper();
 				User newUser = mapper.readValue(request.getReader(), User.class);
 				User u = thisService.registerUser(newUser);
 				if (u != null) {
 					response.setStatus(201);
 					response.getWriter().println(mapper.writeValueAsString(u));
 				} else {
-					response.sendError(400, "Invalid fields");
+					response.setStatus(400);
+					ResponseHelper.makeResponse(response,  "Invalid fields");
 				}
 			}
 		} catch (Exception e) {
@@ -81,9 +89,11 @@ public class RestrictionServlet extends HttpServlet {
 		User u = (User) session.getAttribute("User");
 		try {
 			if (u == null) {
-				response.sendError(400, "There is no user logged into the session");
+				response.setStatus(400);
+				ResponseHelper.makeResponse(response, "There is no user logged into the session");
 			} else {
-				response.getWriter().println("You have successfully logged out " + u.getUsername());	
+				ResponseHelper.makeResponse(response, "You have successfully logged out " + u.getUsername());
+				// response.getWriter().println("You have successfully logged out " + u.getUsername());	
 			}
 		} catch (Exception e) {
 			
@@ -103,11 +113,15 @@ public class RestrictionServlet extends HttpServlet {
 			// check if already have session
 			if (u != null) {
 					// if session exists
-					response.sendError(400, "already logged in");	
+					response.setStatus(400);
+					ResponseHelper.makeResponse(response, "already logged in");
+					return;
 			} else {
+				ObjectMapper om = new ObjectMapper();
+				LoginClass lc = om.readValue(request.getReader(), LoginClass.class);
 				// if session does not exist
-				String username = request.getParameter("username");
-				String password = request.getParameter("password");
+				String username = lc.getUsername();
+				String password = lc.getPassword();
 				
 				// get user with username and password
 				u = thisService.login(username, password);
@@ -125,7 +139,8 @@ public class RestrictionServlet extends HttpServlet {
 				} else {
 					// username and pass does not exist
 					session.invalidate();
-					response.sendError(400, "Invalid credentials");	
+					response.setStatus(400);
+					ResponseHelper.makeResponse(response, "Invalid credentials");
 				}
 			}
 		} catch (Exception e) {
@@ -148,8 +163,9 @@ public class RestrictionServlet extends HttpServlet {
 				// no current session
 				session.invalidate();
 				
-				response.sendError(400, "No session logged in");
-				
+				response.setStatus(400);
+				ResponseHelper.makeResponse(response, "No session logged in");
+				return;
 			}
 			
 			int id = Integer.parseInt(parts[parts.length-1]);
@@ -179,6 +195,9 @@ public class RestrictionServlet extends HttpServlet {
 		} catch (NumberFormatException e) {
 			// last part of path was not a number
 			// bad request
+			response.setStatus(400);
+			ResponseHelper.makeResponse(response, "Improper path " + request.getRequestURI() + " : " + parts[parts.length-1] + " must be an integer");
+			return;
 		} catch (Exception e) {
 			
 		}
@@ -218,8 +237,10 @@ public class RestrictionServlet extends HttpServlet {
 		accDAO = new AccountDAOImpl();
 		Account acc = accDAO.get(id);
 		
-		if (acc == null) {
-			response.sendError(400, "Servlet could not find account with id: " + id);
+		if (acc.getStatus() == null) {			
+			response.setStatus(400);
+			ResponseHelper.makeResponse(response, "Servlet could not find account with id: " + id);
+			return;
 		}
 		
 		ObjectMapper mapper = new ObjectMapper();
@@ -235,8 +256,10 @@ public class RestrictionServlet extends HttpServlet {
 		userDAO = new UserDAOImpl();
 		User user = userDAO.get(id);
 		
-		if (user == null) {
-			response.sendError(400, "Servlet could not find user with id: " + id);
+		if (user.getEmail() == null) {
+			response.setStatus(400);
+			ResponseHelper.makeResponse(response, "Servlet could not find user with id: " + id);
+			return;
 		}
 		
 		ObjectMapper mapper = new ObjectMapper();

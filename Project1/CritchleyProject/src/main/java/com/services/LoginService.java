@@ -1,6 +1,5 @@
 package com.services;
 
-import java.sql.Connection;
 import com.dao.impl.UserDAOImpl;
 import com.services.interfaces.LoginServiceInterface;
 import com.user.*;
@@ -8,11 +7,9 @@ import com.user.*;
 public class LoginService implements LoginServiceInterface {
 	static User currentUser;
 	private UserDAOImpl userDAO;
-	private Connection connection;
 	
 	public LoginService() {
 		// TODO Auto-generated constructor stub
-		connection = ConnectionService.getConnection();
 		userDAO = new UserDAOImpl();
 	}
 
@@ -30,16 +27,14 @@ public class LoginService implements LoginServiceInterface {
 
 	public User login(String username, String password) {
 		
-		User temp = userDAO.getByString("username", username);
+		User temp = userDAO.getByUsername(username);
 		if (temp != null) {
 			if (password.equals(temp.getPassword())) {	
 				return temp;
-			} else {
-				return null;
-			}
-		} else {
-			return null;
+			} 
 		}
+		
+		return null;
 		
 	}
 	
@@ -48,11 +43,11 @@ public class LoginService implements LoginServiceInterface {
 		private boolean isTaken(String username, String email) {
 			// TODO Auto-generated method stub
 			// check DB for username and email
-			User found = userDAO.getByString("username", username);
+			User found = userDAO.getByUsername(username);
 			if (found != null)
 				return true;
 			
-			found = userDAO.getByString("email", email);
+			found = userDAO.getByEmail(email);
 			if (found != null )
 				return true;
 			

@@ -27,7 +27,7 @@
 	
 	<servlet>
 		<servlet-name>AccountServlet</servlet-name>
-		<servlet-class>com.servlets.AccountServlet</servlet-class>
+		<servlet-class>com.servlets.AccountsServlet</servlet-class>
 	</servlet>
 	
 	<servlet-mapping>
@@ -36,18 +36,33 @@
 	</servlet-mapping>
 	
 	<servlet>
-		<servlet-name>StandardServlet</servlet-name>
-		<servlet-class>com.servlets.StandardServlet</servlet-class>
+		<servlet-name>ServiceServlet</servlet-name>
+		<servlet-class>com.servlets.ServiceServlet</servlet-class>
 	</servlet>
 	
 	<servlet-mapping>
-		<servlet-name>StandardServlet</servlet-name>
+		<servlet-name>ServiceServlet</servlet-name>
 		<url-pattern>/users</url-pattern>
 		<url-pattern>/accounts/status/*</url-pattern>
 		<url-pattern>/accounts/withdraw</url-pattern>
 		<url-pattern>/accounts/deposit</url-pattern>
 		<url-pattern>/accounts/transfer</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>ErrorServlet</servlet-name> 
+		<servlet-class>com.servlets.ErrorServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>ErrorServlet</servlet-name> 
+		<url-pattern>/error</url-pattern>
+	</servlet-mapping>
+	
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error</location>
+	</error-page>
 	
 	
 </web-app>

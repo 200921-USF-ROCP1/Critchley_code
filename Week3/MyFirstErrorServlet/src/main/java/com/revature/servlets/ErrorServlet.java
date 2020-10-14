@@ -25,6 +25,7 @@ public class ErrorServlet extends HttpServlet {
 	    Integer i = (Integer) request.getAttribute("javax.servlet.error.status_code");
 	    int status_code = i.intValue();
 	    Exception e = (Exception) request.getAttribute("javax.servlet.error.exception");
+	    Error err = (Error) request.getAttribute("javax.servlet.error");
 	    
 	    response.getWriter().println("<!DOCTYPE html>"
 	    		+ "<html>"
@@ -40,9 +41,9 @@ public class ErrorServlet extends HttpServlet {
 	    
 	    if (e != null) {
 	    	response.getWriter().println(e.getMessage());
-	    } else {
-	    	//Error err = (Error) request.getAttribute("javax.servlet.error");
-	    	response.getWriter().println();
+	    } else if (err != null){
+	    	
+	    	response.getWriter().println(err.getMessage());
 	    }
 	    
 	    response.getWriter().println(" </p> </body>"

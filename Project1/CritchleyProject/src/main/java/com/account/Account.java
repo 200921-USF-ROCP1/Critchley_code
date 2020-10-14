@@ -53,15 +53,15 @@ public class Account {
 		this.type = type;
 	}
 
-	public void setStatus(int int1) {
+	/*public void setStatus(int int1) {
 		// TODO Auto-generated method stub
-		
-	}
+		this.status = new AccountStatus(int1);
+	}*/
 
-	public void setType(int int1) {
+	/*public void setType(int int1) {
 		// TODO Auto-generated method stub
-		
-	}
+		this.type = new AccountType(int1);
+	}*/
 
 	public int getUserID() {
 		return userID;

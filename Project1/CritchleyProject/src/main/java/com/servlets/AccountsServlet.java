@@ -10,7 +10,11 @@ import javax.servlet.http.HttpSession;
 
 import com.account.Account;
 import com.dao.impl.AccountDAOImpl;
+import com.dao.impl.UserDAOImpl;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.services.ResponseHelper;
 import com.user.User;
 
 public class AccountsServlet extends HttpServlet {
@@ -27,21 +31,25 @@ public class AccountsServlet extends HttpServlet {
 		
 		if (cur == null) {
 			session.invalidate();
-			response.sendError(400, "No session logged in");
+			response.setStatus(400);
+			ResponseHelper.makeResponse(response, "No session logged in");
+			return;
 		}
-		
-		String role = cur.getRole().getRole();
-		
-		if (!role.equals("Admin")) {
-			response.sendError(401, "You are not allowed to perform this action");
-		}
-		
 		ObjectMapper mapper = new ObjectMapper();
 		Account acc = mapper.readValue(request.getReader(), Account.class);
+		String role = cur.getRole().getRole();
+		
+		if (!role.equals("Admin") && acc.getUserID() != cur.getUserId()) {
+			response.setStatus(401);
+			ResponseHelper.makeResponse(response, "The requested action is not permitted");
+			return;
+		}
+		
 		accountDao = new AccountDAOImpl();
 		acc = accountDao.create(acc);
 		if (acc == null) {
-			response.sendError(500, "Server could not create the requested account");
+			response.setStatus(500);
+			ResponseHelper.makeResponse(response, "Server could not create the requested account");
 		}
 		
 		response.getWriter().println(mapper.writeValueAsString(acc));
@@ -57,20 +65,26 @@ public class AccountsServlet extends HttpServlet {
 		
 		if (cur == null) {
 			session.invalidate();
-			response.sendError(400, "No session logged in");
+			response.setStatus(400);
+			ResponseHelper.makeResponse(response, "No session logged in");
+			return;
 		}
 		
 		String role = cur.getRole().getRole();
 		
 		if (!role.equals("Admin") && !role.equals("Employee")) {
-			response.sendError(401, "You are not allowed to perform this action");
+			response.setStatus(401);
+			ResponseHelper.makeResponse(response, "The requested action is not permitted");
+			return;
 		}
 		
 		accountDao = new AccountDAOImpl();
 		List<Account> accs = accountDao.getAll();
 		
-		if (accs == null) {
-			response.sendError(500, "Server could not get all accounts");
+		if (accs.get(0) == null) {
+			response.setStatus(500);
+			ResponseHelper.makeResponse(response, "Server could not get all accounts");
+			return;
 		}
 		
 		ObjectMapper mapper = new ObjectMapper();
@@ -89,13 +103,17 @@ public class AccountsServlet extends HttpServlet {
 		
 		if (cur == null) {
 			session.invalidate();
-			response.sendError(400, "No session logged in");
+			response.setStatus(400);
+			ResponseHelper.makeResponse(response, "No session logged in");
+			return;
 		}
 		
 		String role = cur.getRole().getRole();
 		
 		if (!role.equals("Admin")) {
-			response.sendError(401, "You are not allowed to perform this action");
+			response.setStatus(401);
+			ResponseHelper.makeResponse(response, "The requested action is not permitted");
+			return;
 		}
 		
 		
@@ -104,10 +122,66 @@ public class AccountsServlet extends HttpServlet {
 		accountDao = new AccountDAOImpl();
 		acc = accountDao.update(acc);
 		if (acc == null) {
-			response.sendError(500, "Server could not update account");
+			response.setStatus(500);
+			ResponseHelper.makeResponse(response, "Server could not update account");
+			return;
 		}
 		
 		response.getWriter().println(mapper.writeValueAsString(acc));
+	}
+	
+	public void doDelete(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		User cur = (User) session.getAttribute("User");
+		
+		if (cur == null) {
+			session.invalidate();
+			response.setStatus(400);
+			ResponseHelper.makeResponse(response, "No session logged in");
+			return;
+		}
+		
+		String role = cur.getRole().getRole();
+		
+		if (!role.equals("Admin")) {
+			response.setStatus(401);
+			ResponseHelper.makeResponse(response, "You are not allowed to perform this action");
+			return;
+		}
+		
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			Account acc = mapper.readValue(request.getReader(), Account.class);
+			AccountDAOImpl accDao = new AccountDAOImpl();
+			if (accDao.get(acc.getAccountId()) == null) {
+				response.setStatus(401);
+				ResponseHelper.makeResponse(response, "Account " + acc.getAccountId() + " cannot be found, and therefore cannot be deleted.");
+				return;
+			}
+			accDao.delete(acc);
+			response.setStatus(202);
+			ResponseHelper.makeResponse(response, "User " + acc.getAccountId() + " has been deleted");
+			
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			response.setStatus(500);
+			ResponseHelper.makeResponse(response, "Server side error while attempting to Delete Account");
+			return;
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			response.setStatus(500);
+			ResponseHelper.makeResponse(response, "Server side error while attempting to Delete Account");
+			return;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			response.setStatus(500);
+			ResponseHelper.makeResponse(response, "Server side error while attempting to Delete Account");
+			return;
+		} 
+		
 	}
 
 }

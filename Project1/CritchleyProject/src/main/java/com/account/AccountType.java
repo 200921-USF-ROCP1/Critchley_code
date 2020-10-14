@@ -4,6 +4,10 @@ public class AccountType {
 	private int typeId; // primary key
 	private String type; // not null, unique
 	
+	public AccountType() {
+		
+	}
+	
 	public AccountType(int typeID) {
 		// TODO Auto-generated constructor stub
 		this.typeId = typeID;

@@ -4,5 +4,7 @@ import com.user.User;
 
 public interface UserDAOInterface extends GenericDAO<User> {
 	
-	public User getByString(String type, String s);
+	public User getByUsername(String s);
+	
+	public User getByEmail(String s);
 }

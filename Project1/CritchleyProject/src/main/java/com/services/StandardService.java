@@ -22,13 +22,17 @@ public class StandardService implements StandardServiceInterface {
 	
 
 	public User updateUserInfo(User user) {
-		
-		if (userDAO.getByString("username", user.getUsername()) != null) {
+		User temp;
+		if ((temp = userDAO.getByUsername(user.getUsername())) != null) {
 			// username taken
-			return null;
-		} else if(userDAO.getByString("email", user.getEmail()) != null) {
+			if (temp.getUserId() != user.getUserId())			
+				return null;
+		}
+		
+		if((temp = userDAO.getByEmail(user.getEmail())) != null) {
 			// email taken
-			return null;
+			if (temp.getUserId() != user.getUserId())
+				return null;
 		}
 		
 		return userDAO.update(user);

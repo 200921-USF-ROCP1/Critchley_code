@@ -1,7 +1,6 @@
 package com.user;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.account.*;
 
@@ -31,10 +30,10 @@ public class User {
 		accounts = new ArrayList<Account>();
 	}
 
-	public User(int userId2, String username2, String password2, String firstName2, String lastName2, String email2,
+	/*public User(int userId2, String username2, String password2, String firstName2, String lastName2, String email2,
 			String role2) {
 		// TODO Auto-generated constructor stub
-	}
+	}*/
 
 	public void setUsername(String username) {
 		this.username = username;
@@ -76,10 +75,10 @@ public class User {
 		return email;
 	}
 	
-	public void setRole(int roleId, String role) {
-		this.role = new Role(roleId, role);
+	public void setRole(Role role) {
+		this.role = role;
 	}
-	
+
 	public Role getRole() {
 		return role;
 	}
@@ -91,24 +90,6 @@ public class User {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-
-	public void checkAccountBalance(int accountId) {
-		// TODO Auto-generated method stub
-		Account acc = getAccount(accountId);
-		if (acc == null) {
-			
-		}
-		
-	}
-	
-/*
-	public Account openAccount(String type) {
-		// TODO Auto-generated method stub
-		Account acc = new Account();
-		accounts.add(acc);
-		return acc;
-	}
-*/
 	
 	public Account withdrawAndDeposit(double amount, int accountId) {
 		Account acc = getAccount(accountId);
@@ -139,7 +120,9 @@ public class User {
 			return null;
 		}
 	}
-	
+	public void setAccounts(ArrayList<Account> accounts) {
+		this.accounts = accounts;
+	}
 	public ArrayList<Account> getAccounts() {
 		return accounts;
 	}
@@ -147,27 +130,18 @@ public class User {
 	public Account openAccount(int accountID, int userID, double balance, int statusID, int typeID) {
 		// TODO Auto-generated method stub
 		Account acc = new Account(accountID, userID, balance, statusID, typeID);
+		if (accounts == null) {
+			accounts = new ArrayList<Account>();
+		}
 		accounts.add(acc);
 		return acc;
-	}
-	
-	public void setRole(int role_id) {
-		// TODO Auto-generated method stub
-		if (role_id == 1) {
-			this.role = new Role(1, "Admin");
-		} else if (role_id == 2) {
-			this.role = new Role(2, "Employee");
-		} else if (role_id == 3) {
-			this.role = new Role(3, "Standard");
-		} else if (role_id == 4) {
-			this.role = new Role(4, "Premium");
-		}
-		
-		
 	}
 
 	public void setAccount(Account acc) {
 		// TODO Auto-generated method stub
+		if (accounts == null) {
+			accounts = new ArrayList<Account>();
+		}
 		accounts.add(acc);
 		
 	}
