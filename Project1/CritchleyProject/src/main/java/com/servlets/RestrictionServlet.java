@@ -65,6 +65,7 @@ public class RestrictionServlet extends HttpServlet {
 				ResponseHelper.makeResponse(response,  "The requested action is not permitted");
 				return;
 			} else {
+				// register new user
 				User newUser = mapper.readValue(request.getReader(), User.class);
 				User u = thisService.registerUser(newUser);
 				if (u != null) {

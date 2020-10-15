@@ -130,6 +130,10 @@ public class AccountsServlet extends HttpServlet {
 		response.getWriter().println(mapper.writeValueAsString(acc));
 	}
 	
+	/*
+	 * PATHS TO HANDLE:
+	 * 	/accounts
+	 */
 	public void doDelete(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession();
 		User cur = (User) session.getAttribute("User");
@@ -160,22 +164,19 @@ public class AccountsServlet extends HttpServlet {
 			}
 			accDao.delete(acc);
 			response.setStatus(202);
-			ResponseHelper.makeResponse(response, "User " + acc.getAccountId() + " has been deleted");
+			ResponseHelper.makeResponse(response, "Account " + acc.getAccountId() + " has been deleted");
 			
 		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			response.setStatus(500);
 			ResponseHelper.makeResponse(response, "Server side error while attempting to Delete Account");
 			return;
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			response.setStatus(500);
 			ResponseHelper.makeResponse(response, "Server side error while attempting to Delete Account");
 			return;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			response.setStatus(500);
 			ResponseHelper.makeResponse(response, "Server side error while attempting to Delete Account");

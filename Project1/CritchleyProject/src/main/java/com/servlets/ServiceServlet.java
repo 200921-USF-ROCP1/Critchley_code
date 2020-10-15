@@ -60,7 +60,11 @@ public class ServiceServlet extends HttpServlet {
 			
 			src = wd.getAccountId();
 			amount = wd.getAmount();
-			
+			if (amount < 0) {
+				response.setStatus(401);
+				ResponseHelper.makeResponse(response, "You are not allowed to perform this action (Cannot withdraw a negative amount)");
+				return;
+			}
 			if (!role.equals("Admin") && cur.getAccount(src) == null) {
 				response.setStatus(401);
 				ResponseHelper.makeResponse(response, "You are not allowed to perform this action");
@@ -70,6 +74,7 @@ public class ServiceServlet extends HttpServlet {
 			success = service.withdraw(amount, src);
 			
 			if (success) {
+				response.setStatus(201);
 				ResponseHelper.makeResponse(response, amount + " has been withdrawn from Account " + src);
 			} else {
 				response.setStatus(500);
@@ -80,6 +85,11 @@ public class ServiceServlet extends HttpServlet {
 			WithdrawDepositClass wd = om.readValue(request.getReader(), WithdrawDepositClass.class);
 			src = wd.getAccountId();
 			amount = wd.getAmount();
+			if (amount < 0) {
+				response.setStatus(401);
+				ResponseHelper.makeResponse(response, "You are not allowed to perform this action (Cannot deposit a negative amount)");
+				return;
+			}
 			if (!role.equals("Admin") && cur.getAccount(src) == null) {
 				response.setStatus(401);
 				ResponseHelper.makeResponse(response, "You are not allowed to perform this action");
@@ -103,6 +113,12 @@ public class ServiceServlet extends HttpServlet {
 			target = tc.getTargetAccountId();
 			amount = tc.getAmount();
 			
+			if (amount < 0) {
+				response.setStatus(401);
+				ResponseHelper.makeResponse(response, "You are not allowed to perform this action (Cannot deposit a negative amount)");
+				return;
+			}
+			
 			if (!role.equals("Admin") && cur.getAccount(src) == null) {
 				response.setStatus(401);
 				ResponseHelper.makeResponse(response, "You are not allowed to perform this action");
@@ -112,8 +128,8 @@ public class ServiceServlet extends HttpServlet {
 			success = service.transfer(src, target, amount);
 			
 			if (success) {
+				response.setStatus(201);
 				ResponseHelper.makeResponse(response, amount + " has been transfered from Account " + src + " to Account " + target);
-				//response.sendError(200, amount + " has been transfered from Account " + src + " to Account " + target);
 			} else {
 				response.setStatus(401);
 				ResponseHelper.makeResponse(response, "Could not transfer " + amount + " from Account " + src + " to Account: " + target);
@@ -167,15 +183,18 @@ public class ServiceServlet extends HttpServlet {
 			}
 			ObjectMapper mapper = new ObjectMapper();
 			response.getWriter().println(mapper.writeValueAsString(users));
-		} else {
+		} else { 		// URI Pattern matched /accounts/status/:statusId
+			
 			int statusId;
 			try {
+				// get /:statusId
 				statusId = Integer.parseInt(parts[parts.length - 1]);
-			} catch (NumberFormatException e) {
+			} catch (NumberFormatException e) {		// if statusId is not a number
 				response.setStatus(400);
 				ResponseHelper.makeResponse(response, "Improper path " + request.getRequestURI() + " : " + parts[parts.length-1] + " must be an integer");
 				return;
 			}
+			
 			service = new StandardService();
 			List<Account> accounts = service.accountsByStatus(statusId);
 			if (accounts == null) {
@@ -228,6 +247,10 @@ public class ServiceServlet extends HttpServlet {
 		
 	}
 	
+	/*
+	 * PATHS TO HANDLE:
+	 * 	/users
+	 */
 	public void doDelete(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession();
 		User cur = (User) session.getAttribute("User");

@@ -11,7 +11,7 @@ public class User {
 	private String firstName; // not null
 	private String lastName; // not null
 	private String email; // not null
-	ArrayList<Account> accounts;
+	private ArrayList<Account> accounts;
 	private Role role;
 	
 	public User() {

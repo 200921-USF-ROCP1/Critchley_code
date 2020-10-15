@@ -59,6 +59,7 @@ public class UserDAOImpl implements UserDAOInterface{
 				User cur = new User();
 				cur.setUsername(rs.getString("username"));
 				cur.setUserId(rs.getInt("user_id"));
+				cur.setPassword(rs.getString("password"));
 				cur.setFirstName(rs.getString("firstName"));
 				cur.setLastName(rs.getString("lastName"));
 				cur.setEmail(rs.getString("email"));
@@ -208,6 +209,7 @@ public class UserDAOImpl implements UserDAOInterface{
 	public void delete(User t) {
 		// TODO Auto-generated method stub
 		try {
+			
 			List<Account> accounts = t.getAccounts();
 			AccountDAOImpl accDao = new AccountDAOImpl();
 			
@@ -219,6 +221,8 @@ public class UserDAOImpl implements UserDAOInterface{
 			ps.setInt(1, t.getUserId());
 			
 			ps.executeUpdate();
+			
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -239,6 +243,7 @@ public class UserDAOImpl implements UserDAOInterface{
 			while (rs.next()) {
 				cur = new User();
 				cur.setUsername(rs.getString("username"));
+				cur.setPassword(rs.getString("password"));
 				cur.setUserId(rs.getInt("user_id"));
 				cur.setFirstName(rs.getString("firstName"));
 				cur.setLastName(rs.getString("lastName"));

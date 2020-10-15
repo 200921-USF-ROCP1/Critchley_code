@@ -88,7 +88,6 @@ public class StandardService implements StandardServiceInterface {
 	}
 
 	public List<Account> accountsByStatus(int statusId) {
-		// TODO Auto-generated method stub
 		List<Account> accounts = accDAO.getAll();
 		List<Account> retAccs = new ArrayList<Account>();
 		for (Account a: accounts) {
